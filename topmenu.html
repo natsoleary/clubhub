@@ -1,0 +1,19 @@
+<nav class="navbar navbar-inverse" style="position:fixed; width:100%; z-index:2;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" style="color:orange" href="/">ClubHub</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li class="nav-item" ><a style="color:orange" href="/about">About</a></li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" style="color:orange" data-toggle="dropdown" href="#">{{netid}}<span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          {% if showEdit == True: %}
+          <li><a href="edit" class="dropdown-item">Edit Clubs</a></li>
+          {% endif %}
+	        <li><a class="dropdown-item" href="https://fed.princeton.edu/cas/logout">Log Out</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

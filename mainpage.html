@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+     <style>
+       th {
+	   background: white;
+	   position: sticky;
+	   top: 0;
+	   box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+       }
+       .form-check {
+	   padding-left: 20px;
+       }
+       .input-group.md-form.form-sm.form-1 input{
+	   border: 1px solid #bdbdbd;
+	   border-top-right-radius: 0.25rem;
+	   border-bottom-right-radius: 0.25rem;
+       }
+       .custom-scrollbar {
+	   position: relative;
+	   height: 900px;
+	   overflow: auto;
+       }
+       .table-wrapper-scroll-y {
+	   display: block;
+       }
+       .row {
+	   margin-top: 50px;
+	   z-index: 0;
+	   position: relative;
+       }
+       table {
+	   text-align: left;
+	   position: relative;
+	   border-collapse: collapse;
+       }
+       tr.header_dark th {
+	   background: orange;
+	   color: #333;
+       }
+     </style>
+     <title>Princeton Club Directory</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+   </head>
+   <body>
+     <div class="container-fluid" style="padding:0px">
+       {% include 'topmenu.html' %}
+       <mainbody class="mainbody">
+	 <div class="row">
+	   <div class="col-sm-4">
+	     <form class="form-inline" style="background:#E0E0E0" id="queryform" onSubmit="return false;">
+	       <br>
+	       <input type="text" style="width:100%" class="form-control" id="searchquery" placeholder="Search for Clubs!" value = "">
+	       <br><br>
+	       <div class="form-check">
+		 {% for category in categories: %}
+		 {% for c in category: %}
+		 {% if loop.first: %}
+		 <strong><u>{{c}}</u></strong><br>
+		 {% else: %}
+		 <input class="form-check-input" type="checkbox" id="{{category[0]}}{{loop.index}}" value="{{c}}">
+		 <label class="form-check-label" for="{{category[0]}}{{loop.index}}">
+		   {{c}}
+		 </label>
+		 <br>
+		 {% endif %}
+		 {% endfor %}
+		 <br><br>
+		 {% endfor %}
+		 <center><input class="btn btn-danger" type="reset" id="resetform" value="Reset"/></center>
+		 <br><br>
+	       </div>
+	     </form>
+	   </div>
+	   <div class="col-sm-8">
+	     {% include 'popup.html' %}
+	     <p id="resultsParagraph"></p>
+	   </div>
+	   <!-- <img src="/images/test-stock-photo.jpg"> -->
+       </mainbody>
+       
+       <script src=
+               "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+       </script>
+       
+       <script>
+	 
+	 function setup()
+	 {
+             getResults();
+             $('#searchquery').on('input', getResults);
+	     var x;
+	     for (x = 2; x < 20; x++) {
+		 if (x < 9) {
+		     var day = '#Days' + x.toString();
+		     $(day).on('input', getResults);
+		 }
+		 var cat = '#Category' + x.toString();
+		 $(cat).on('input', getResults);
+	     }
+	     $('#resetform').mouseup(getResultsDelay);
+	 }
+	 
+	 function handleResponse(response)
+	 {
+             $('#resultsParagraph').html(response);
+	 }
+	 
+	 let request = null;
+
+	 function getResultsDelay()
+	 {
+	     setTimeout(getResults, 100);
+	 }
+	 
+	 function getResults()
+	 {
+	     let url = "/search?"
+	     
+             let query = $('#searchquery').val();
+             query = encodeURIComponent(query);
+	     
+	     if (query != '')
+		 url += 'searchquery=' + query
+	     
+	     var x;
+	     
+	     for (x = 2; x < 9; x++) {
+		 var name = '#Days' + x.toString();
+		 if ($(name).is(':checked'))
+		     url += "&Days" + x.toString() + '=' + $(name).val();
+	     }
+	     
+	     for (x = 2; x < 20; x++) {
+		 var	name = '#Category' + x.toString();
+		 if ($(name).is(':checked'))
+                     url += "&Category" + x.toString() + '=' + $(name).val();
+             }
+	     
+             if (request != null)
+		 request.abort();
+	     
+             request = $.ajax(
+		 {
+                     type: "GET",
+                     url: url,
+                     success: handleResponse
+		 }
+             );
+	 }
+	 
+	 $('document').ready(setup);
+	 
+       </script>
+     </div>
+   </body>
+ </html>
+ 
