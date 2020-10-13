@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .row {
+           margin-top: 50px;
+           z-index: 0;
+           position: relative;
+	   padding: 20px;
+      }
+    </style>
+    <title>Edit Clubs - Princeton Club Directory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  </head>
+  <body>
+    <div class="container-fluid" style="padding:0px">
+      {% include 'topmenu.html' %}      
+      <div class="row">
+      <center><h1 class="center">Edit your clubs below!</h1></center>
+          <div class="container">
+            <ul class="nav nav-tabs">
+              {% for club in clubs: %}  
+                <li class="nav-item {% if loop.index == 1:%} active {%endif%}" >
+                  <a class="nav-link" href="#{{club.getId()}}" data-toggle="tab">{{club.getName()}}</a>
+                </li>
+              {%endfor%}
+            </ul>
+        
+            <div class="tab-content">
+              {% for club in clubs: %}
+                <div class="tab-pane {% if loop.index == 1: %} active {%endif%}" id="{{club.getId()}}">
+                  <form class="form-group" action="updateDatabase" method="GET">
+                    <label for="clubName"> Club Name</label>
+                    <input type="clubName" class="form-control" name="clubName" value="{{club.getName()}}">
+                    <small id="clubNameHelp" class="form-text text-muted">Edit your club's name</small>
+                    <br><br>
+                    <label for="clubDesc"> Club Description</label>
+                    <textarea type="clubDesc" class="form-control"  name="clubDesc">{{club.getDescription()}}</textarea>
+                    <small id="clubDescHelp" class="form-text text-muted">Edit your club's description</small>
+                    <br><br>
+                    <label for="clubWeb"> Club Website</label>
+                          <input type="clubWeb" class="form-control" name="clubWeb" value="{{club.getWebsite()}}">
+                    <small id="clubWebHelp" class="form-text text-muted">Edit your club's website (full URL)</small>
+                    <br><br>
+                    <label for="clubDays"> Club Meeting Days</label>
+                    <input type="clubDays" class="form-control" name="clubDays" value="{{club.getDays()}}">
+                    <small id="clubDaysHelp" class="form-text text-muted">Edit the days your club meets (format example: "Monday, Wednesday") </small>
+                    <br><br>
+                    <label for="clubEmail"> Club Email</label>
+                    <input type="clubEmail" class="form-control" name="clubEmail" value="{{club.getEmail()}}">
+                    <small id="clubEmailHelp" class="form-text text-muted">Edit your club's email</small>
+                    <input name ="clubId" type="hidden" value={{club.getId()}}>
+                    <br>
+                    <center><button class="btn btn-primary">Save!</button></center>
+                  </form>
+                </div>
+              {% endfor %}  
+        </div>
+
+      
+      
+      </div>
+    </div>
+    
+    
+  </body>
+  
+  
+  
+</html>
